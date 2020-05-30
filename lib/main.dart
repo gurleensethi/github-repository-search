@@ -53,26 +53,9 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Github Search'),
-      ),
       body: Container(
-        child: Column(
+        child: Stack(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    enabled: !_isLoading,
-                    controller: _controller,
-                  ),
-                ),
-                RaisedButton(
-                  child: Text('Search'),
-                  onPressed: _isLoading ? null : _fetchRepositories,
-                ),
-              ],
-            ),
             if (_isLoading && _isSuccess)
               Container(
                 padding: EdgeInsets.all(16.0),
@@ -82,6 +65,7 @@ class _HomeState extends State<Home> {
             if (!_isLoading && _isSuccess)
               Expanded(
                 child: ListView.builder(
+                  padding: EdgeInsets.only(top: 80),
                   itemCount: _data.data.length,
                   itemBuilder: (context, index) {
                     final repository = _data.data[index];
@@ -89,6 +73,40 @@ class _HomeState extends State<Home> {
                   },
                 ),
               ),
+            SafeArea(
+              child: Card(
+                color: Color(0xFF333333),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: TextField(
+                          enabled: !_isLoading,
+                          controller: _controller,
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                          decoration: InputDecoration.collapsed(
+                            hintText: 'Search',
+                            hintStyle: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      color: Colors.white,
+                      child: IconButton(
+                        icon: Icon(Icons.search),
+                        onPressed: _isLoading ? null : _fetchRepositories,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),

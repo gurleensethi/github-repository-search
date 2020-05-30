@@ -17,3 +17,15 @@ class GitHubRepository {
     );
   }
 }
+
+class Resource<T> {
+  final bool result;
+  final T data;
+  final String message;
+
+  Resource({
+    this.result,
+    this.data,
+    this.message = "",
+  });
+}

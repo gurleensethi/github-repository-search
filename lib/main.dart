@@ -22,12 +22,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final List<GitHubRepository> _repositories = [];
   final _controller = TextEditingController();
   bool _isLoading = false;
+  Resource<List<GitHubRepository>> _data;
+
+  bool get _isSuccess => _data != null && _data.result;
+  bool get _isError => _data != null && !_data.result;
 
   void _fetchRepositories() async {
-    // TODO: Check for netowrk error
     setState(() {
       _isLoading = true;
     });
@@ -35,20 +37,16 @@ class _HomeState extends State<Home> {
     if (text == null && text.trim().isEmpty) {
       return;
     }
-    final response = await api.searchRepositories(text);
+    final resource = await api.searchRepositories(text);
     setState(() {
       _isLoading = false;
-      _repositories.clear();
-      _repositories.addAll(response);
+      _data = resource;
     });
   }
 
   @override
   void initState() {
     super.initState();
-
-    //TODO: Remove this
-    _fetchRepositories();
   }
 
   @override
@@ -74,17 +72,18 @@ class _HomeState extends State<Home> {
                 ),
               ],
             ),
-            if (_isLoading)
+            if (_isLoading && _isSuccess)
               Container(
                 padding: EdgeInsets.all(16.0),
                 child: CircularProgressIndicator(),
               ),
-            if (!_isLoading)
+            if (_isError) Text(_data.message),
+            if (!_isLoading && _isSuccess)
               Expanded(
                 child: ListView.builder(
-                  itemCount: _repositories.length,
+                  itemCount: _data.data.length,
                   itemBuilder: (context, index) {
-                    final repository = _repositories[index];
+                    final repository = _data.data[index];
                     return Text(repository.fullName);
                   },
                 ),

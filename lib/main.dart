@@ -23,10 +23,15 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final List<GitHubRepository> _repositories = [];
+  final _controller = TextEditingController();
 
   void _fetchRepositories() async {
     // TODO: Check for netowrk error
-    final response = await api.searchRepositories('css');
+    final text = _controller.text;
+    if (text == null && text.trim().isEmpty) {
+      return;
+    }
+    final response = await api.searchRepositories(text);
     setState(() {
       _repositories.clear();
       _repositories.addAll(response);
@@ -44,13 +49,33 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Github Search'),
+      ),
       body: Container(
-        child: ListView.builder(
-          itemCount: _repositories.length,
-          itemBuilder: (context, index) {
-            final repository = _repositories[index];
-            return Text(repository.fullName);
-          },
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(controller: _controller),
+                ),
+                RaisedButton(
+                  child: Text('Search'),
+                  onPressed: _fetchRepositories,
+                ),
+              ],
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _repositories.length,
+                itemBuilder: (context, index) {
+                  final repository = _repositories[index];
+                  return Text(repository.fullName);
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

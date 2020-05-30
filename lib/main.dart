@@ -53,62 +53,75 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: Stack(
-          children: [
-            if (_isLoading && _isSuccess)
-              Container(
-                padding: EdgeInsets.all(16.0),
-                child: CircularProgressIndicator(),
-              ),
-            if (_isError) Text(_data.message),
-            if (!_isLoading && _isSuccess)
-              Expanded(
-                child: ListView.builder(
-                  padding: EdgeInsets.only(top: 80),
-                  itemCount: _data.data.length,
-                  itemBuilder: (context, index) {
-                    final repository = _data.data[index];
-                    return GithubRepositoryCard(repository: repository);
-                  },
-                ),
-              ),
-            SafeArea(
-              child: Card(
-                color: Color(0xFF333333),
-                child: Row(
-                  children: [
-                    Expanded(
+      body: Column(
+        children: [
+          Expanded(
+            child: Stack(
+              children: [
+                if (_isLoading && _isSuccess)
+                  Positioned.fill(
+                    child: Center(
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        child: TextField(
-                          enabled: !_isLoading,
-                          controller: _controller,
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                          decoration: InputDecoration.collapsed(
-                            hintText: 'Search',
-                            hintStyle: TextStyle(
-                              color: Colors.white,
+                        padding: EdgeInsets.all(16.0),
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  ),
+                if (_isError)
+                  Positioned.fill(
+                    child: Center(
+                      child: Text(_data.message),
+                    ),
+                  ),
+                if (!_isLoading && _isSuccess)
+                  Expanded(
+                    child: ListView.builder(
+                      padding: EdgeInsets.only(top: 80),
+                      itemCount: _data.data.length,
+                      itemBuilder: (context, index) {
+                        final repository = _data.data[index];
+                        return GithubRepositoryCard(repository: repository);
+                      },
+                    ),
+                  ),
+                SafeArea(
+                  child: Card(
+                    color: Color(0xFF333333),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
+                            child: TextField(
+                              enabled: !_isLoading,
+                              controller: _controller,
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                              decoration: InputDecoration.collapsed(
+                                hintText: 'Search',
+                                hintStyle: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                        Container(
+                          color: Colors.white,
+                          child: IconButton(
+                            icon: Icon(Icons.search),
+                            onPressed: _isLoading ? null : _fetchRepositories,
+                          ),
+                        ),
+                      ],
                     ),
-                    Container(
-                      color: Colors.white,
-                      child: IconButton(
-                        icon: Icon(Icons.search),
-                        onPressed: _isLoading ? null : _fetchRepositories,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

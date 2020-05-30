@@ -21,7 +21,7 @@ Future<Resource<List<GitHubRepository>>> searchRepositories(
   } catch (error) {
     return Resource(
       result: false,
-      message: error.message,
+      message: error.toString(),
     );
   }
 }

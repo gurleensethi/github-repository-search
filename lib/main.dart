@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github_search_app/api.dart' as api;
+import 'package:github_search_app/github_repository_card.dart';
 import 'package:github_search_app/model.dart';
 
 void main() {
@@ -84,7 +85,7 @@ class _HomeState extends State<Home> {
                   itemCount: _data.data.length,
                   itemBuilder: (context, index) {
                     final repository = _data.data[index];
-                    return Text(repository.fullName);
+                    return GithubRepositoryCard(repository: repository);
                   },
                 ),
               ),

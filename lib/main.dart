@@ -24,15 +24,20 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final List<GitHubRepository> _repositories = [];
   final _controller = TextEditingController();
+  bool _isLoading = false;
 
   void _fetchRepositories() async {
     // TODO: Check for netowrk error
+    setState(() {
+      _isLoading = true;
+    });
     final text = _controller.text;
     if (text == null && text.trim().isEmpty) {
       return;
     }
     final response = await api.searchRepositories(text);
     setState(() {
+      _isLoading = false;
       _repositories.clear();
       _repositories.addAll(response);
     });
@@ -58,23 +63,32 @@ class _HomeState extends State<Home> {
             Row(
               children: [
                 Expanded(
-                  child: TextField(controller: _controller),
+                  child: TextField(
+                    enabled: !_isLoading,
+                    controller: _controller,
+                  ),
                 ),
                 RaisedButton(
                   child: Text('Search'),
-                  onPressed: _fetchRepositories,
+                  onPressed: _isLoading ? null : _fetchRepositories,
                 ),
               ],
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _repositories.length,
-                itemBuilder: (context, index) {
-                  final repository = _repositories[index];
-                  return Text(repository.fullName);
-                },
+            if (_isLoading)
+              Container(
+                padding: EdgeInsets.all(16.0),
+                child: CircularProgressIndicator(),
               ),
-            ),
+            if (!_isLoading)
+              Expanded(
+                child: ListView.builder(
+                  itemCount: _repositories.length,
+                  itemBuilder: (context, index) {
+                    final repository = _repositories[index];
+                    return Text(repository.fullName);
+                  },
+                ),
+              ),
           ],
         ),
       ),

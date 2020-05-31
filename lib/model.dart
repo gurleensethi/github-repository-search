@@ -44,7 +44,7 @@ class Resource<T> {
 
 class GitHubUser {
   final String login;
-  final String id;
+  final int id;
   final String avatarUrl;
   final String url;
 
@@ -55,7 +55,8 @@ class GitHubUser {
     this.avatarUrl,
   });
 
-  factory GitHubUser.fromJSON(Map<String, dynamic> json) {
+  factory GitHubUser.fromJson(Map<String, dynamic> json) {
+    print(json);
     return GitHubUser(
       id: json['id'],
       avatarUrl: json['avatar_url'],

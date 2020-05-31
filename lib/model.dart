@@ -41,3 +41,26 @@ class Resource<T> {
     this.message = "",
   });
 }
+
+class GitHubUser {
+  final String login;
+  final String id;
+  final String avatarUrl;
+  final String url;
+
+  GitHubUser({
+    this.id,
+    this.login,
+    this.url,
+    this.avatarUrl,
+  });
+
+  factory GitHubUser.fromJSON(Map<String, dynamic> json) {
+    return GitHubUser(
+      id: json['id'],
+      avatarUrl: json['avatar_url'],
+      login: json['login'],
+      url: json['url'],
+    );
+  }
+}

@@ -28,6 +28,7 @@ class _HomeState extends State<Home> {
   Resource<List<GitHubRepository>> _data;
 
   bool get _isSuccess => _data != null && _data.result;
+
   bool get _isError => _data != null && !_data.result;
 
   void _fetchRepositories() async {
@@ -74,15 +75,13 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 if (!_isLoading && _isSuccess)
-                  Expanded(
-                    child: ListView.builder(
-                      padding: EdgeInsets.only(top: 80),
-                      itemCount: _data.data.length,
-                      itemBuilder: (context, index) {
-                        final repository = _data.data[index];
-                        return GithubRepositoryCard(repository: repository);
-                      },
-                    ),
+                  ListView.builder(
+                    padding: EdgeInsets.only(top: 80),
+                    itemCount: _data.data.length,
+                    itemBuilder: (context, index) {
+                      final repository = _data.data[index];
+                      return GithubRepositoryCard(repository: repository);
+                    },
                   ),
                 SafeArea(
                   child: Card(

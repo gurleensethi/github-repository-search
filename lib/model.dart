@@ -56,7 +56,6 @@ class GitHubUser {
   });
 
   factory GitHubUser.fromJson(Map<String, dynamic> json) {
-    print(json);
     return GitHubUser(
       id: json['id'],
       avatarUrl: json['avatar_url'],

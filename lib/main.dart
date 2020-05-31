@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:github_search_app/GithubResourceList.dart';
 import 'package:github_search_app/api.dart' as api;
 import 'package:github_search_app/github_repository_card.dart';
 import 'package:github_search_app/model.dart';
@@ -75,12 +76,10 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 if (!_isLoading && _isSuccess)
-                  ListView.builder(
-                    padding: EdgeInsets.only(top: 80),
-                    itemCount: _data.data.length,
-                    itemBuilder: (context, index) {
-                      final repository = _data.data[index];
-                      return GithubRepositoryCard(repository: repository);
+                  GithubResourceList(
+                    data: _data.data,
+                    builder: (context, item) {
+                      return GithubRepositoryCard(repository: item);
                     },
                   ),
                 SafeArea(
